@@ -49,12 +49,12 @@ void drawBoard (SDL_Renderer* rend, Board b, float bx, float by, float bs, int m
   }
 }
 void drawGame (SDL_Renderer* rend) {
-  if (isWin(game.stats[0])) {
+  if (isWin(game.stats)) {
     drawSquare(rend, 0, 0, s*3, 1, 0, 0, 1);
     return;
   }
 
-  if (isWin(game.stats[0] >> 9)) {
+  if (isWin(game.stats >> 9)) {
     drawSquare(rend, 0, 0, s*3, 0, 0, 1, 1);
     return;
   }
@@ -68,9 +68,9 @@ void drawGame (SDL_Renderer* rend) {
                 , py = s*y + pad*(y%3)
                 , ps = s - pad*2;
 
-      if (game.stats[0] & g_bit) {
+      if (game.stats & g_bit) {
         drawSquare(rend, px, py, ps, 1, 0, 0, 1);
-      } else if (game.stats[0] & (g_bit << 9)) {
+      } else if (game.stats & (g_bit << 9)) {
         drawSquare(rend, px, py, ps, 0, 0, 1, 1);
       } else {
         if (game.focus & g_bit)

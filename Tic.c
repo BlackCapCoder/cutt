@@ -9,8 +9,8 @@ typedef struct Game {
   // Which local boards the next player can play on. 0-8 used
   Board focus;
 
-  // Which local boards has been won. 1=both
-  Board stats[2];
+  // Which local boards has been won. 0-8=first player, 9-17=second player, 18-27=both
+  Board stats;
 
   // Local boards
   Board board[9];
@@ -91,12 +91,11 @@ bool _makeMove (Game *g, int gi, int li) {
 
   b |= l_bit << turn;
 
-  if (isWin(b >> turn)) {
-    (*g).stats[0] |= g_bit << turn;
-    (*g).stats[1] |= g_bit;
-  }
+  if (isWin(b >> turn))
+    (*g).stats |= (g_bit << turn) | (g_bit << 18);
 
-  (*g).focus = (*g).stats[1] & l_bit? ~(*g).stats[1]: l_bit;
+  int st = (*g).stats >> 18;
+  (*g).focus = st & l_bit? ~st: l_bit;
   (*g).board[gi] = b;
   (*g).round++;
 
