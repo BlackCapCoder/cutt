@@ -60,9 +60,21 @@ Board getLocal (Game *g, int ix) {
 
 // Has a board been won?
 bool isWin (Board b) {
+
+  // This monster should be slightly faster..
+  return ( ((b & t5) == t5)
+         && ( ((b & d1) == d1) || ((b & d2) == d2)
+           || ((b & c2) == c2) || ((b & r2) == r2)
+            )
+         )
+        || ( ((b & r1) == r1) || ((b & r3) == r3)
+          || ((b & c1) == c1) || ((b & c3) == c3)
+           );
+
   return (r1 == (b & r1)) || (r2 == (b & r2)) || (r3 == (b & r3))
       || (c1 == (b & c1)) || (c2 == (b & c2)) || (c3 == (b & c3))
       || (d1 == (b & d1)) || (d2 == (b & d2));
+
 }
 
 // Claims a square for the current player. Returns true if successful
