@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
-#include "Tic.c"
+#include "AI.c"
 
 const float w = 800 // Window width
           , h = 800 // Window height
@@ -124,6 +124,7 @@ void renderLoop (SDL_Window* w) {
         }
         case SDL_MOUSEBUTTONDOWN: {
           if (makeMove(&game, marked_gx, marked_gy, marked_lx, marked_ly))
+            AIMove(&game);
             redraw = SDL_TRUE;
           break;
         }
