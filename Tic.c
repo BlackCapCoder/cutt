@@ -9,7 +9,7 @@ typedef struct Game {
   // Which local boards the next player can play on
   Board focus;
 
-  // Which local boards have been won. 0=first player, 1=second player, 2=both
+  // Which local boards has been won. 0=first player, 1=second player, 2=both
   Board stats[3];
 
   // Local boards. 0-8=first player, 9-17=second player
@@ -54,8 +54,8 @@ const Board
 
 
 // Get a local board by index
-Board getLocal (Game b, int ix) {
-  return b.board[ix];
+Board getLocal (Game *g, int ix) {
+  return (*g).board[ix];
 }
 
 // Has a board been won?

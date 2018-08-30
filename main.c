@@ -48,13 +48,13 @@ void drawBoard (SDL_Renderer* rend, Board b1, Board b2, float bx, float by, floa
     }
   }
 }
-void drawGame (SDL_Renderer* rend, Game g) {
-  if (isWin(g.stats[0])) {
+void drawGame (SDL_Renderer* rend) {
+  if (isWin(game.stats[0])) {
     drawSquare(rend, 0, 0, s*3, 1, 0, 0, 1);
     return;
   }
 
-  if (isWin(g.stats[1])) {
+  if (isWin(game.stats[1])) {
     drawSquare(rend, 0, 0, s*3, 0, 0, 1, 1);
     return;
   }
@@ -62,8 +62,8 @@ void drawGame (SDL_Renderer* rend, Game g) {
   for (int y = 0; y < 3; y++) {
     for (int x = 0; x < 3; x++) {
       int i = y*3 + x, g_bit = 1 << i;
-      Board b1 = getLocal(g, i);
-      Board b2 = getLocal(g, i+9);
+      Board b1 = getLocal(&game, i);
+      Board b2 = getLocal(&game, i+9);
 
       const float px = s*x + pad*(x%3)
                 , py = s*y + pad*(y%3)
@@ -74,7 +74,7 @@ void drawGame (SDL_Renderer* rend, Game g) {
       } else if (game.stats[1] & g_bit) {
         drawSquare(rend, px, py, ps, 0, 0, 1, 1);
       } else {
-        if (g.focus & g_bit)
+        if (game.focus & g_bit)
           drawSquare(rend, px, py, ps, 1,1,1,0.1);
 
         drawBoard( rend, b1, b2, px, py, ps
@@ -136,7 +136,7 @@ void renderLoop (SDL_Window* w) {
       SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
       SDL_RenderClear(rend);
 
-      drawGame(rend, game);
+      drawGame(rend);
 
       SDL_RenderPresent(rend);
       redraw = SDL_FALSE;
