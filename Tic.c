@@ -72,7 +72,7 @@ bool makeMove (Game *g, int gx, int gy, int lx, int ly) {
   if (!((*g).focus & g_bit)) return false;
 
   int turn  = (*g).round % 2;
-  int bi    = gi + (turn == 0? 0: 9);
+  int bi    = gi + turn*9;
   Board b   = (*g).board[bi];
   int l_bit = 1 << (ly*3+lx);
 

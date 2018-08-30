@@ -124,8 +124,8 @@ void renderLoop (SDL_Window* w) {
           break;
         }
         case SDL_MOUSEBUTTONDOWN: {
-          makeMove(&game, marked_gx, marked_gy, marked_lx, marked_ly);
-          redraw = SDL_TRUE;
+          if (makeMove(&game, marked_gx, marked_gy, marked_lx, marked_ly))
+            redraw = SDL_TRUE;
           break;
         }
       }
