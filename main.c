@@ -98,36 +98,36 @@ void renderLoop (SDL_Window* w) {
     SDL_Event event;
 
     // Process events
-    while (SDL_PollEvent(&event)) {
-      switch (event.type) {
-        case SDL_QUIT: {
-          done = SDL_TRUE;
-          break;
+    SDL_WaitEvent(&event);
+
+    switch (event.type) {
+      case SDL_QUIT: {
+        done = SDL_TRUE;
+        break;
+      }
+      case SDL_MOUSEMOTION: {
+        int x = event.motion.x;
+        int y = event.motion.y;
+
+        int gx, gy, lx, ly;
+
+        gx = x / s;
+        gy = y / s;
+        lx = (x - marked_gx*s) / (s/3);
+        ly = (y - marked_gy*s) / (s/3);
+
+        if (marked_gx != gx || marked_gy != gy || marked_lx != lx || marked_ly != ly) {
+          marked_gx = gx; marked_gy = gy; marked_lx = lx; marked_ly = ly;
+          redraw = SDL_TRUE;
         }
-        case SDL_MOUSEMOTION: {
-          int x = event.motion.x;
-          int y = event.motion.y;
 
-          int gx, gy, lx, ly;
-
-          gx = x / s;
-          gy = y / s;
-          lx = (x - marked_gx*s) / (s/3);
-          ly = (y - marked_gy*s) / (s/3);
-
-          if (marked_gx != gx || marked_gy != gy || marked_lx != lx || marked_ly != ly) {
-            marked_gx = gx; marked_gy = gy; marked_lx = lx; marked_ly = ly;
-            redraw = SDL_TRUE;
-          }
-
-          break;
-        }
-        case SDL_MOUSEBUTTONDOWN: {
-          if (makeMove(&game, marked_gx, marked_gy, marked_lx, marked_ly))
-            AIMove(&game);
-            redraw = SDL_TRUE;
-          break;
-        }
+        break;
+      }
+      case SDL_MOUSEBUTTONDOWN: {
+        if (makeMove(&game, marked_gx, marked_gy, marked_lx, marked_ly))
+          AIMove(&game);
+          redraw = SDL_TRUE;
+        break;
       }
     }
 
@@ -140,7 +140,7 @@ void renderLoop (SDL_Window* w) {
 
       SDL_RenderPresent(rend);
       redraw = SDL_FALSE;
-      printf("Redraw: %d\n", ++num_redraws);
+      /* printf("Redraw: %d\n", ++num_redraws); */
     }
   }
 
