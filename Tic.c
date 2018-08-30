@@ -1,19 +1,19 @@
 #include <stdbool.h>
 
-// int is a bit wasteful because we only use the first 9 bits.
+// A single tic tac toe board. 0-8=first player, 9-17=second player
 typedef int Board;
 
 // Represents a game of ultimate tic tac toe
 typedef struct Game {
 
-  // Which local boards the next player can play on
+  // Which local boards the next player can play on. 0-8 used
   Board focus;
 
-  // Which local boards has been won. 0=first player, 1=second player, 2=both
-  Board stats[3];
+  // Which local boards has been won. 1=both
+  Board stats[2];
 
-  // Local boards. 0-8=first player, 9-17=second player
-  Board board[2*9*9];
+  // Local boards
+  Board board[9];
 
   // Current round number
   int round;
@@ -83,22 +83,21 @@ bool _makeMove (Game *g, int gi, int li) {
 
   if (!((*g).focus & g_bit)) return false;
 
-  int turn  = (*g).round & 1;
-  int bi    = gi + turn*9;
-  Board b   = (*g).board[bi];
+  int turn  = ((*g).round & 1)*9;
+  Board b   = (*g).board[gi];
   int l_bit = 1 << li;
 
-  if (b & l_bit) return false;
+  if (b & (l_bit | (l_bit << 9))) return false;
 
-  b |= l_bit;
+  b |= l_bit << turn;
 
-  if (isWin(b)) {
-    (*g).stats[turn] |= g_bit;
-    (*g).stats[2]    |= g_bit;
+  if (isWin(b >> turn)) {
+    (*g).stats[0] |= g_bit << turn;
+    (*g).stats[1] |= g_bit;
   }
 
-  (*g).focus = (*g).stats[2] & l_bit? ~(*g).stats[2]: l_bit;
-  (*g).board[bi] = b;
+  (*g).focus = (*g).stats[1] & l_bit? ~(*g).stats[1]: l_bit;
+  (*g).board[gi] = b;
   (*g).round++;
 
   return true;

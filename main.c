@@ -23,15 +23,15 @@ void drawSquare (SDL_Renderer* rend, float x, float y, float size, float r, floa
   SDL_Rect rect = { .x = x, .y = y, .w = size, .h = size };
   SDL_RenderFillRect(rend, &rect);
 }
-void drawBoard (SDL_Renderer* rend, Board b1, Board b2, float bx, float by, float bs, int marked) {
+void drawBoard (SDL_Renderer* rend, Board b, float bx, float by, float bs, int marked) {
   const float pad = 2, s = bs/3;
 
   for (int y = 0; y < 3; y++) {
     for (int x = 0; x < 3; x++) {
       int i = y*3+x, t = 1 << i;
 
-      bool red   = b1 & t
-         , blue  = b2 & t
+      bool red   = b & t
+         , blue  = b & (t << 9)
          , white = !red && !blue;
 
       float r = red || white? 1: 0
@@ -62,8 +62,7 @@ void drawGame (SDL_Renderer* rend) {
   for (int y = 0; y < 3; y++) {
     for (int x = 0; x < 3; x++) {
       int i = y*3 + x, g_bit = 1 << i;
-      Board b1 = getLocal(&game, i);
-      Board b2 = getLocal(&game, i+9);
+      Board b = getLocal(&game, i);
 
       const float px = s*x + pad*(x%3)
                 , py = s*y + pad*(y%3)
@@ -71,13 +70,13 @@ void drawGame (SDL_Renderer* rend) {
 
       if (game.stats[0] & g_bit) {
         drawSquare(rend, px, py, ps, 1, 0, 0, 1);
-      } else if (game.stats[1] & g_bit) {
+      } else if (game.stats[0] & (g_bit << 9)) {
         drawSquare(rend, px, py, ps, 0, 0, 1, 1);
       } else {
         if (game.focus & g_bit)
           drawSquare(rend, px, py, ps, 1,1,1,0.1);
 
-        drawBoard( rend, b1, b2, px, py, ps
+        drawBoard( rend, b, px, py, ps
                  , marked_gx == x && marked_gy == y? marked_ly*3 + marked_lx: -1);
 
       }
