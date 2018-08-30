@@ -54,7 +54,7 @@ void drawGame (SDL_Renderer* rend) {
     return;
   }
 
-  if (isWin(game.stats[1])) {
+  if (isWin(game.stats[0] >> 9)) {
     drawSquare(rend, 0, 0, s*3, 0, 0, 1, 1);
     return;
   }
