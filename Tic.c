@@ -66,15 +66,15 @@ bool isWin (Board b) {
 }
 
 // Claims a square for the current player. Returns true if successful
-bool makeMove (Game *g, int gx, int gy, int lx, int ly) {
-  int gi = gy*3+gx, g_bit = 1 << gi;
+bool _makeMove (Game *g, int gi, int li) {
+  int g_bit = 1 << gi;
 
   if (!((*g).focus & g_bit)) return false;
 
-  int turn  = (*g).round % 2;
+  int turn  = (*g).round & 1;
   int bi    = gi + turn*9;
   Board b   = (*g).board[bi];
-  int l_bit = 1 << (ly*3+lx);
+  int l_bit = 1 << li;
 
   if (b & l_bit) return false;
 
@@ -90,5 +90,9 @@ bool makeMove (Game *g, int gx, int gy, int lx, int ly) {
   (*g).round++;
 
   return true;
+
+}
+bool makeMove (Game *g, int gx, int gy, int lx, int ly) {
+  return _makeMove(g, gy*3+gx, ly*3+lx);
 }
 
